@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'pages/login.dart'; // Importez la page de login
 import 'pages/singin.dart'; // Importez la page d'inscription
+import 'pages/doctor_signup.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,11 +25,20 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class DiabetesLoginScreen extends StatelessWidget {
+class DiabetesLoginScreen extends StatefulWidget {
   const DiabetesLoginScreen({Key? key}) : super(key: key);
 
   @override
+  State<DiabetesLoginScreen> createState() => _DiabetesLoginScreenState();
+}
+
+class _DiabetesLoginScreenState extends State<DiabetesLoginScreen> {
+  // 0 = user, 1 = doctor
+  int doctor = 0;
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF9D84E8),
@@ -49,47 +60,66 @@ class DiabetesLoginScreen extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: const Color(0xFF9D84E8), // Couleur de fond violet
+      backgroundColor: const Color(0xFF9D84E8),
       body: SafeArea(
+        
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
           child: Column(
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Container(
-                height: 180,
-                width: MediaQuery.sizeOf(context).width * 0.98,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Image.asset(
-                    'assets/diabetes_illustration.jpg', // Placer une image similaire
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 40),
+  height: 180,
+  width: MediaQuery.sizeOf(context).width * 0.98,
+  decoration: BoxDecoration(
+    color: Colors.white.withOpacity(0.2),
+    borderRadius: const BorderRadius.only(
+      topRight: Radius.circular(125),
+      bottomLeft: Radius.circular(125),
+    ),
+  ),
+  child: ClipRRect(
+    borderRadius: const BorderRadius.only(
+      topRight: Radius.circular(125),
+      bottomLeft: Radius.circular(125),
+    ),
+    child: Image.asset(
+      'assets/diabetes_illustration.png', // Placer une image similaire
+      fit: BoxFit.cover,
+    ),
+  ),
+),
+              const SizedBox(height: 25),
               Text(
                 'Hello, ... your application for complete monitoring of your diabetes!',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style:GoogleFonts.jockeyOne(
                   color: Colors.white.withOpacity(0.8),
                   fontSize: 16,
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 25),
               _buildButton(
                 'LOGIN',
                 Colors.white,
                 const Color(0xFF9D84E8),
                 () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()), // Utilisez LoginPage()
-                  );
+                  // Navigate based on doctor flag
+                  if (doctor == 1) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(),
+                      ),
+                    );
+                  }
                 },
               ),
               const SizedBox(height: 20),
@@ -98,13 +128,44 @@ class DiabetesLoginScreen extends StatelessWidget {
                 Colors.white,
                 const Color(0xFF9D84E8),
                 () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignupScreen()), // Utilisez SignupPage()
-                  );
+                  // Navigate based on doctor flag
+                  if (doctor == 1) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DoctorSignupScreen(),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SignupScreen(),
+                      ),
+                    );
+                  }
                 },
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 5),
+
+              // <-- Switch for doctor option -->
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  
+                  Switch(
+                    value: doctor == 1,
+                    onChanged: (val) => setState(() => doctor = val ? 1 : 0),
+                    activeColor: Colors.white,
+                    activeTrackColor: Colors.white70,
+                    inactiveThumbColor: Colors.white,
+                    inactiveTrackColor: Colors.white70,
+                  ),
+                  const Text('Doctor', style: TextStyle(color: Colors.white)),
+                ],
+              ),
+
+              const SizedBox(height: 0),
               Row(
                 children: [
                   Expanded(
