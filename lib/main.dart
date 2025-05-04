@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'pages/login.dart'; // Importez la page de login
-import 'pages/singin.dart'; // Importez la page d'inscription
-import 'pages/doctor_signup.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
+import 'pages/login.dart';
+import 'pages/singin.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,12 +35,40 @@ class DiabetesLoginScreen extends StatefulWidget {
 }
 
 class _DiabetesLoginScreenState extends State<DiabetesLoginScreen> {
-  // 0 = user, 1 = doctor
-  int doctor = 0;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  void _handleGoogleSignIn() async {
+    try {
+      final GoogleSignInAccount? account = await _googleSignIn.signIn();
+      if (account != null) {
+        print("Google user name: \${account.displayName}");
+        print("Google user email: \${account.email}");
+      } else {
+        print("Google sign-in canceled");
+      }
+    } catch (error) {
+      print("Google sign-in error: \$error");
+    }
+  }
+
+  void _handleAppleSignIn() async {
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+      print("Apple user ID: \${credential.userIdentifier}");
+      print("Apple user email: \${credential.email}");
+      print("Apple user name: \${credential.givenName} \${credential.familyName}");
+    } catch (error) {
+      print("Apple sign-in error: \$error");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF9D84E8),
@@ -62,38 +92,37 @@ class _DiabetesLoginScreenState extends State<DiabetesLoginScreen> {
       ),
       backgroundColor: const Color(0xFF9D84E8),
       body: SafeArea(
-        
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
           child: Column(
             children: [
               const SizedBox(height: 10),
               Container(
-  height: 180,
-  width: MediaQuery.sizeOf(context).width * 0.98,
-  decoration: BoxDecoration(
-    color: Colors.white.withOpacity(0.2),
-    borderRadius: const BorderRadius.only(
-      topRight: Radius.circular(125),
-      bottomLeft: Radius.circular(125),
-    ),
-  ),
-  child: ClipRRect(
-    borderRadius: const BorderRadius.only(
-      topRight: Radius.circular(125),
-      bottomLeft: Radius.circular(125),
-    ),
-    child: Image.asset(
-      'assets/diabetes_illustration.png', // Placer une image similaire
-      fit: BoxFit.cover,
-    ),
-  ),
-),
+                height: 180,
+                width: MediaQuery.sizeOf(context).width * 0.98,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(125),
+                    bottomLeft: Radius.circular(125),
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(125),
+                    bottomLeft: Radius.circular(125),
+                  ),
+                  child: Image.asset(
+                    'assets/diabetes_illustration.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
               const SizedBox(height: 25),
               Text(
                 'Hello, ... your application for complete monitoring of your diabetes!',
                 textAlign: TextAlign.center,
-                style:GoogleFonts.jockeyOne(
+                style: GoogleFonts.jockeyOne(
                   color: Colors.white.withOpacity(0.8),
                   fontSize: 16,
                 ),
@@ -104,22 +133,10 @@ class _DiabetesLoginScreenState extends State<DiabetesLoginScreen> {
                 Colors.white,
                 const Color(0xFF9D84E8),
                 () {
-                  // Navigate based on doctor flag
-                  if (doctor == 1) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LoginScreen(),
-                      ),
-                    );
-                  } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LoginScreen(),
-                      ),
-                    );
-                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
                 },
               ),
               const SizedBox(height: 20),
@@ -128,74 +145,38 @@ class _DiabetesLoginScreenState extends State<DiabetesLoginScreen> {
                 Colors.white,
                 const Color(0xFF9D84E8),
                 () {
-                  // Navigate based on doctor flag
-                  if (doctor == 1) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DoctorSignupScreen(),
-                      ),
-                    );
-                  } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SignupScreen(),
-                      ),
-                    );
-                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignupScreen()),
+                  );
                 },
               ),
-              const SizedBox(height: 5),
-
-              // <-- Switch for doctor option -->
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  
-                  Switch(
-                    value: doctor == 1,
-                    onChanged: (val) => setState(() => doctor = val ? 1 : 0),
-                    activeColor: Colors.white,
-                    activeTrackColor: Colors.white70,
-                    inactiveThumbColor: Colors.white,
-                    inactiveTrackColor: Colors.white70,
-                  ),
-                  const Text('Doctor', style: TextStyle(color: Colors.white)),
-                ],
-              ),
-
-              const SizedBox(height: 0),
+              const SizedBox(height: 25),
               Row(
                 children: [
                   Expanded(
-                    child: Divider(
-                      color: Colors.white.withOpacity(0.5),
-                    ),
+                    child: Divider(color: Colors.white.withOpacity(0.5)),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: Text(
                       'OR',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
-                      ),
+                      style: TextStyle(color: Colors.white.withOpacity(0.8)),
                     ),
                   ),
                   Expanded(
-                    child: Divider(
-                      color: Colors.white.withOpacity(0.5),
-                    ),
+                    child: Divider(color: Colors.white.withOpacity(0.5)),
                   ),
                 ],
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 25),
               _buildSocialButton(
                 'Continue with Google',
                 Colors.white,
                 Colors.black87,
                 FontAwesomeIcons.google,
                 Colors.red,
+                onTap: _handleGoogleSignIn,
               ),
               const SizedBox(height: 15),
               _buildSocialButton(
@@ -204,6 +185,7 @@ class _DiabetesLoginScreenState extends State<DiabetesLoginScreen> {
                 Colors.black87,
                 FontAwesomeIcons.apple,
                 Colors.black,
+                onTap: _handleAppleSignIn,
               ),
               const Spacer(),
               Padding(
@@ -222,17 +204,11 @@ class _DiabetesLoginScreenState extends State<DiabetesLoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         IconButton(
-                          icon: const Icon(
-                            FontAwesomeIcons.instagram,
-                            color: Colors.white,
-                          ),
+                          icon: const Icon(FontAwesomeIcons.instagram, color: Colors.white),
                           onPressed: () {},
                         ),
                         IconButton(
-                          icon: const Icon(
-                            FontAwesomeIcons.facebook,
-                            color: Colors.white,
-                          ),
+                          icon: const Icon(FontAwesomeIcons.facebook, color: Colors.white),
                           onPressed: () {},
                         ),
                       ],
@@ -270,30 +246,37 @@ class _DiabetesLoginScreenState extends State<DiabetesLoginScreen> {
     );
   }
 
-  Widget _buildSocialButton(String text, Color bgColor, Color textColor, IconData icon, Color iconColor) {
-    return Container(
-      width: double.infinity,
-      height: 50,
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: iconColor,
-          ),
-          const SizedBox(width: 10),
-          Text(
-            text,
-            style: TextStyle(
-              color: textColor,
-              fontWeight: FontWeight.bold,
+  Widget _buildSocialButton(
+    String text,
+    Color bgColor,
+    Color textColor,
+    IconData icon,
+    Color iconColor, {
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        height: 50,
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: iconColor),
+            const SizedBox(width: 10),
+            Text(
+              text,
+              style: TextStyle(
+                color: textColor,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

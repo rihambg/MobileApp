@@ -94,7 +94,7 @@ class _DoctorInfoScreenState extends State<DoctorSignupScreen> {
                       items: const [
                         DropdownMenuItem(value: 'Male', child: Text('Male')),
                         DropdownMenuItem(value: 'Female', child: Text('Female')),
-                        DropdownMenuItem(value: 'Other', child: Text('Other')),
+                        
                       ],
                       onChanged: (value) => setState(() => _selectedGender = value),
                       validator: (value) => value == null ? 'Please select gender' : null,

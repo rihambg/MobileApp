@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'singin.dart'; // Signup screen
 import 'test.dart'; // Replace with your target page
 import 'package:google_fonts/google_fonts.dart';
-
+import 'doctorMainpage.dart' ;
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -179,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text('Don\'t have account ? ', style: TextStyle(color: Colors.white, fontSize: 12)),
+                                const Text('Don\'t have account ? ', style: TextStyle(color: Colors.black, fontSize: 12)),
                                 GestureDetector(
                                   onTap: () {
                                     Navigator.push(
@@ -190,9 +190,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   child: Text(
                                     "SIGN UP",
                                     style: TextStyle(
-                                      color: Colors.blue[200],
+                                      color: Color.fromARGB(255, 109, 153, 255),
                                       decoration: TextDecoration.underline,
-                                      decorationColor: Colors.blue[200],
+                                      decorationColor: Color.fromARGB(255, 109, 153, 255),
                                       decorationThickness: 2,
                                     ),
                                   ),

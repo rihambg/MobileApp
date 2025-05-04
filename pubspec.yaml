@@ -18,6 +18,10 @@ dependencies:
   sign_in_with_apple: ^7.0.1
   google_fonts: ^6.1.0
   intl_phone_field: ^3.2.0
+  http: ^1.3.0
+  file_picker: ^10.1.2
+  fl_chart: ^0.71.0
+  youtube_player_flutter: ^9.1.1
 
 dev_dependencies:
   flutter_test:
@@ -31,6 +35,23 @@ flutter:
   assets:
     - assets/diabetes_illustration.png
     - assets/doctor_team.png
+    - assets/home.png
+    - assets/people.png
+    - assets/stethoscope.png
+    - assets/compass.png
+    - assets/plat_1.jpg
+    - assets/plat_2.jpg
+    - assets/plat_3.jpg
+    - assets/plat_4.jpg
+    - assets/plat_5.jpg
+    - assets/Frame 26.png
+    - assets/mineral-water 1.png
+    - assets/clock 1.png
+    - assets/sleep.png
+    - assets/hydration.png
+    - assets/medication.png
+    - assets/activity.png
+    - assets/food.png
 
 flutter_launcher_icons:
   android: true
